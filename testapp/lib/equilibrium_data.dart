@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:testapp/GraphPrint.dart';
+import 'package:testapp/equilibrium_tray_out.dart';
 
-class MyApp extends StatelessWidget {
-  MyApp(
-      {@required this.g1,
+class MyAppEquilibrium extends StatelessWidget {
+  MyAppEquilibrium(
+      {@required this.y2,
+      @required this.xo,
+      @required this.gs,
+      @required this.gl,
       @required this.y1,
-      @required this.p,
-      @required this.ls,
-      @required this.x2,
-      @required this.kxa,
-      @required this.kya,
+      @required this.m,
+      @required this.e,
       @required this.c,
       @required this.n});
-  final double g1;
+  final double y2;
+  final double xo;
+  final double gs;
+  final double gl;
   final double y1;
-  final double p;
-  final double ls;
-  final double x2;
-  final double kxa;
-  final double kya;
+  final double m;
+  final double e;
   final int c;
   final int n;
   @override
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyForm(
-          g1: g1, y1: y1, p: p, ls: ls, x2: x2, kxa: kxa, kya: kya, c: c, n: n),
+          y2: y2, xo: xo, gs: gs, gl: gl, y1: y1, m: m, e: e, n: n, c: c),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -39,23 +39,23 @@ class MyApp extends StatelessWidget {
 class MyForm extends StatefulWidget {
   MyForm(
       {Key key,
-      @required this.g1,
+      @required this.y2,
+      @required this.xo,
+      @required this.gs,
+      @required this.gl,
       @required this.y1,
-      @required this.p,
-      @required this.ls,
-      @required this.x2,
-      @required this.kxa,
-      @required this.kya,
+      @required this.m,
+      @required this.e,
       @required this.c,
       @required this.n})
       : super(key: key);
-  final double g1;
+  final double y2;
+  final double xo;
+  final double gs;
+  final double gl;
   final double y1;
-  final double p;
-  final double ls;
-  final double x2;
-  final double kxa;
-  final double kya;
+  final double m;
+  final double e;
   final int c;
   final int n;
   @override
@@ -67,34 +67,40 @@ class _MyFormState extends State<MyForm> {
 
   @override
   Widget build(BuildContext context) {
-    double eg1 = widget.g1;
-    double y2 = widget.y1;
-    double ep = widget.p;
-    double els = widget.ls;
-    double x1 = widget.x2;
-    double ekxa = widget.kxa;
-    double ekya = widget.kya;
+    double ey2 = widget.y2;
+    double exo = widget.xo;
+    double egs = widget.gs;
+    double egl = widget.gl;
+    double ey1 = widget.y1;
+    double em = widget.m;
+    double ee = widget.e;
     int ec = widget.c;
-    int n;
+    int n = widget.n;
+    int o = em.toInt();
     var t;
-    if (ec == 1) {
-      n = 10;
-      t = [];
+
+    if (n == 50) {
+      em = 13;
+      n = 13;
+      t = new List.generate(n, (_) => new List(2));
       t = [
         [0.00, 0.00],
-        [0.000056, 0.00079],
-        [0.00014, 0.00223],
-        [0.00028, 0.0062],
-        [0.000421, 0.0107],
-        [0.000842, 0.0259],
-        [0.0014, 0.0473],
-        [0.00197, 0.0685],
-        [0.00297, 0.104],
-        [0.004, 0.16],
+        [0.005, 0.009],
+        [0.009, 0.011],
+        [0.011, 0.014],
+        [0.013, 0.017],
+        [0.015, 0.02],
+        [0.018, 0.024],
+        [0.029, 0.038],
+        [0.039, 0.051],
+        [0.051, 0.66],
+        [0.066, 0.080],
+        [0.075, 0.098],
+        [0.093, 0.121],
       ];
     } else {
       n = widget.n;
-      t = [];
+      t = new List.generate(n, (_) => new List(2));
     }
     return Scaffold(
         backgroundColor: Colors.grey[200],
@@ -113,7 +119,7 @@ class _MyFormState extends State<MyForm> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // name textfield
-                            if (ec == 1)
+                            if (o == 50)
                               for (int i = 0; i < n; i++)
                                 Padding(
                                     padding: const EdgeInsets.only(right: 32.0),
@@ -156,7 +162,7 @@ class _MyFormState extends State<MyForm> {
                                         ),
                                       ],
                                     )),
-                            if (ec != 1)
+                            if (o != 50)
                               for (int i = 0; i < n; i++)
                                 Padding(
                                     padding: const EdgeInsets.only(right: 32.0),
@@ -208,16 +214,20 @@ class _MyFormState extends State<MyForm> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => GraphPrint(
-                                            g1: eg1,
-                                            y1: y2,
-                                            p: ep,
-                                            ls: els,
-                                            x2: x1,
-                                            kxa: ekxa,
-                                            kya: ekya,
-                                            cl: t,
-                                            n: n)),
+                                        builder: (context) =>
+                                            EquilibriumTrayOut(
+                                                y2: ey2,
+                                                gs: egs,
+                                                gl: egl,
+                                                xo: exo,
+                                                m: em,
+                                                y1: ey1,
+                                                e: ee,
+                                                a: t,
+                                                b: 0,
+                                                c: 0,
+                                                d: 0,
+                                                co: 0)),
                                   );
                                 }
                               },

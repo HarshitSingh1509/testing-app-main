@@ -1,9 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class ChartApp extends StatelessWidget {
+class PolyTrayOut extends StatelessWidget {
   // ignore: prefer_const_constructors_in_immutables
-  ChartApp(
+  PolyTrayOut(
       {@required this.y2,
       @required this.xo,
       @required this.gs,
@@ -11,7 +13,11 @@ class ChartApp extends StatelessWidget {
       @required this.y1,
       @required this.m,
       @required this.e,
-      @required this.c});
+      @required this.a,
+      @required this.b,
+      @required this.c,
+      @required this.d,
+      @required this.co});
   final double y2;
   final double xo;
   final double gs;
@@ -19,15 +25,30 @@ class ChartApp extends StatelessWidget {
   final double y1;
   final double m;
   final double e;
-  final int c;
+  final double a;
+  final double b;
+  final double c;
+  final double d;
+  final int co;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Chart Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home:
-          _MyHomePage(y2: y2, xo: xo, gs: gs, gl: gl, y1: y1, m: m, e: e, c: c),
+      home: _MyHomePage(
+          y2: y2,
+          xo: xo,
+          gs: gs,
+          gl: gl,
+          y1: y1,
+          m: m,
+          e: e,
+          a: a,
+          b: b,
+          c: c,
+          d: d,
+          co: co),
     );
   }
 }
@@ -43,7 +64,11 @@ class _MyHomePage extends StatefulWidget {
       @required this.y1,
       @required this.m,
       @required this.e,
-      @required this.c})
+      @required this.a,
+      @required this.b,
+      @required this.c,
+      @required this.d,
+      @required this.co})
       : super(key: key);
   final double y2;
   final double xo;
@@ -52,7 +77,11 @@ class _MyHomePage extends StatefulWidget {
   final double y1;
   final double m;
   final double e;
-  final int c;
+  final double a;
+  final double b;
+  final double c;
+  final double d;
+  final int co;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -70,16 +99,17 @@ class _MyHomePageState extends State<_MyHomePage> {
     double gsw = widget.gs;
     double glw = widget.gl;
     double y1w = widget.y1;
-    int cw = widget.c;
+    double aw = widget.a;
+    double bw = widget.b;
+    double cw = widget.c;
+    double dw = widget.d;
+    int cow = widget.co;
     double mw = widget.m;
     double cy2;
     double cy1;
     cy2 = y2w / (100 - y2w);
-    if (cw == 1) {
-      cy1 = cy2 * (y1w / 100);
-    } else {
-      cy1 = cy2 * (1 - (y1w / 100));
-    }
+
+    cy1 = cy2 * (y1w / 100);
 
     double cgs = gsw * (1 - (y2w / 100));
     double cgl = glw * (1 - (xow / 100));
@@ -88,17 +118,57 @@ class _MyHomePageState extends State<_MyHomePage> {
     double cxd = cxo;
     double cyd = cy1;
     chartData3.add(_ChartData3(cxd, cyd));
+    var v = new List.generate(10, (_) => new List(2));
+    int j1 = 0;
+    if (cow == 0) {
+      for (double i = 0; i <= cxn; i = i + cxn / 9) {
+        v[j1][0] = i;
+        v[j1][1] = aw * i * i * i + bw * i * i + cw * i + dw;
+        j1++;
+      }
+    } else if (cow == 2) {
+      for (double i = 0; i <= cxn; i = i + cxn / 9) {
+        v[j1][0] = i;
+        v[j1][1] = aw * exp(bw);
+        j1++;
+      }
+    } else {
+      for (double i = 0; i <= cxn; i = i + cxn / 9) {
+        v[j1][0] = i;
+        v[j1][1] = (aw + bw * i) / (cw + dw * i);
+        j1++;
+      }
+    }
     double j = 0;
     double f1(double x) {
       chartData3.add(_ChartData3(x, (x - cxo) * cgl / cgs + cy1));
       return (x - cxo) * cgl / cgs + cy1;
     }
 
+    double res;
     double f2(double y) {
-      chartData3.add(_ChartData3(y / mw, y));
-      return y / mw;
+      for (int i = 0; i < 10; i++) {
+        if (y <= v[i][1]) {
+          chartData3.add(_ChartData3(
+              ((y - v[i - 1][1]) *
+                      (v[i][0] - v[i - 1][0]) /
+                      (v[i][1] - v[i - 1][1])) +
+                  v[i - 1][0],
+              y));
+          res = ((y - v[i - 1][1]) *
+                  (v[i][0] - v[i - 1][0]) /
+                  (v[i][1] - v[i - 1][1])) +
+              v[i - 1][0];
+          print(res);
+          i = 10;
+        } else {
+          res = cxn;
+        }
+      }
+      return res;
     }
 
+    int p;
     for (int i = 1;; i++) {
       if (i % 2 != 0) {
         cyd = f1(cxd);
@@ -106,13 +176,16 @@ class _MyHomePageState extends State<_MyHomePage> {
         cxd = f2(cyd);
       }
       j = j + 0.5;
-      if (cxd >= cxn || cyd >= cy2) break;
+      if (cxd >= cxn || cyd >= cy2) {
+        p = ((((j).ceil()) / ew).ceil());
+        print(p);
+        break;
+      }
     }
-    var p = ((((j).ceil()) / ew).ceil());
-    for (double k = 0; k <= cxn;) {
-      k = k + 0.0001;
-      chartData1.add(_ChartData1(k, mw * k));
+    for (int k = 0; k < 10; k++) {
+      chartData1.add(_ChartData1(v[k][0], v[k][1]));
     }
+    print(p);
     for (double l = 0; l <= cxn;) {
       l = l + 0.0001;
       chartData2.add(_ChartData2(l, (cgl * (l - cxo)) / cgs + cy1));

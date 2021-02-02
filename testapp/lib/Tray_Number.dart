@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:testapp/Hieght_Calculation.dart';
 import 'package:testapp/Tray_Output.dart';
+import 'package:testapp/equilibrium_data.dart';
+import 'package:testapp/equation_take.dart';
 
 class AppBarTrays extends StatelessWidget {
   static const String _title = 'Calculation for number of Trays';
@@ -84,7 +86,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final _m = TextEditingController();
   final _e = TextEditingController();
   var c;
+  var ec;
   String dropdownValue = 'output concentration of solute in gas';
+  String dropdownValue1 = 'slope of line';
+  String _htext = 'enter slope of line';
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -141,11 +146,48 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               return null;
             },
           ),
+          DropdownButton<String>(
+            value: dropdownValue1,
+            icon: Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            style: TextStyle(color: Colors.grey),
+            underline: Container(
+              height: 2,
+              color: Colors.blue,
+            ),
+            onChanged: (String newValue) {
+              setState(() {
+                dropdownValue1 = newValue;
+
+                if (newValue == 'slope of line') {
+                  ec = 1;
+                  _htext = 'enter slope of line';
+                } else if (newValue == 'enter data points') {
+                  ec = 0;
+                  _htext = 'enter no. of data points';
+                } else {
+                  ec = 2;
+                  _htext = 'enter e for expo., p for poly., r for ratio';
+                }
+              });
+            },
+            items: <String>[
+              'slope of line',
+              'enter data points',
+              'enter equation'
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
           TextFormField(
             controller: _m,
-            decoration: const InputDecoration(
-              hintText: 'slope of equilibrium line',
-            ),
+            decoration: InputDecoration(hintText: _htext
+                //'slope of equilibrium line',
+                ),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter some text';
@@ -209,25 +251,59 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () {
                 // Validate will return true if the form is valid, or false if
                 // the form is invalid.
+
                 if (_formKey.currentState.validate()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChartApp(
-                            y2: double.parse(_y2.text),
-                            xo: double.parse(_xo.text),
-                            gs: double.parse(_gs.text),
-                            gl: double.parse(_gl.text),
-                            y1: double.parse(_y1.text),
-                            m: double.parse(_m.text),
-                            e: double.parse(_e.text),
-                            c: c)),
-                  );
-                  // Process data.
+                  if (ec == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyAppEquilibrium(
+                              y2: double.parse(_y2.text),
+                              xo: double.parse(_xo.text),
+                              gs: double.parse(_gs.text),
+                              gl: double.parse(_gl.text),
+                              y1: double.parse(_y1.text),
+                              m: double.parse(_m.text),
+                              e: double.parse(_e.text),
+                              c: c,
+                              n: int.parse(_m.text))),
+                    );
+                    // Process data.
+                  } else if (ec == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChartApp(
+                                y2: double.parse(_y2.text),
+                                xo: double.parse(_xo.text),
+                                gs: double.parse(_gs.text),
+                                gl: double.parse(_gl.text),
+                                y1: double.parse(_y1.text),
+                                m: double.parse(_m.text),
+                                e: double.parse(_e.text),
+                                c: c,
+                              )),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyAppEquation(
+                              y2: double.parse(_y2.text),
+                              xo: double.parse(_xo.text),
+                              gs: double.parse(_gs.text),
+                              gl: double.parse(_gl.text),
+                              y1: double.parse(_y1.text),
+                              m: _m.text,
+                              e: double.parse(_e.text),
+                              c: c,
+                              n: 0)),
+                    );
+                  }
                 } else {
                   return showDialog(
                     context: context,

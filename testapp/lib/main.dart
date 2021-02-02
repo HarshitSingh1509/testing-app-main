@@ -76,42 +76,50 @@ class MyScaffold extends StatelessWidget {
           new SizedBox(
             width: 200.0,
             height: 100.0,
-            child: new RaisedButton(
+            child: new ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AppBarTrays()),
                 );
               },
-              color: Colors.blue,
-              elevation: 5,
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                  elevation: MaterialStateProperty.all<double>(5.0),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20))))),
               child: const Text('Number of Trays',
                   style: TextStyle(
                     fontSize: 20,
                   )),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
             ),
           ),
           const SizedBox(height: 30),
           new SizedBox(
             width: 200.0,
             height: 100.0,
-            child: new RaisedButton(
+            child: new ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AppBarTower()),
                 );
               },
-              color: Colors.blue,
-              elevation: 5,
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                  elevation: MaterialStateProperty.all<double>(5.0),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20))))),
               child: const Text('Height Calculation',
                   style: TextStyle(
                     fontSize: 20,
                   )),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
             ),
           ),
           const SizedBox(height: 30),

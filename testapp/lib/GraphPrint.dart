@@ -86,7 +86,7 @@ class _MyHomePageState extends State<_MyHomePage> {
     int n1 = widget.n;
     int m = 10;
     int n = 2;
-    var s = List.generate(m, (i) => List(n1), growable: false);
+    var s = [];
 
     s = [
       [0.00, 0.00],
@@ -117,7 +117,7 @@ class _MyHomePageState extends State<_MyHomePage> {
     print(y2);
 
     int k = 0;
-    var q = List.generate(50, (w) => List(4), growable: false);
+    var q = [][4];
 
     double mop = (y2 - y1) / (x2 - x1);
     for (double j = x1; j < x2;) {
@@ -163,7 +163,7 @@ class _MyHomePageState extends State<_MyHomePage> {
     }
     print(q);
     print(k);
-    var r = List.generate(50, (i) => List(2), growable: false);
+    var r = [][2];
     for (int l = 0; l < k; l++) {
       r[l][0] = q[l][1];
       r[l][1] = 1 / (((1 - r[l][0]) * (r[l][0] - q[l][3])));
@@ -216,7 +216,7 @@ class _MyHomePageState extends State<_MyHomePage> {
                   style: TextStyle(fontSize: 30),
                 )),
             // )
-            FlatButton(
+            TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
@@ -226,7 +226,7 @@ class _MyHomePageState extends State<_MyHomePage> {
                 );
               },
               child: Text('Submit'),
-              color: Colors.green,
+              // color: Colors.green,
             ),
           ],
         ));
